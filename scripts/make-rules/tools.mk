@@ -76,3 +76,16 @@ _install.gotests: ## Install gotests.
 .PHONY: _install.git-chglog
 _install.git-chglog: ## Install git-chglog tool which is used to generate CHANGELOG.
 	@$(GO) install github.com/git-chglog/git-chglog/cmd/git-chglog@$(GIT_CHGLOG_VERSION)
+
+.PHONY: _install.goimports
+_install.goimports: ## Install goimports.
+	@$(GO) install golang.org/x/tools/cmd/goimports@$(GO_IMPORTS_VERSION)
+
+.PHONY: _install.wire
+_install.wire: ## Install wire.
+	@if [ -z "$(WIRE_VERSION)" ]; then \
+		echo "Warning: WIRE_VERSION is not set, using default version."; \
+	else \
+		echo "===========> Installing wire" \
+		$(GO) install github.com/google/wire/cmd/wire@$(WIRE_VERSION); \
+	fi;

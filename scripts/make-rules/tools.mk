@@ -71,3 +71,8 @@ _install.golangci-lint: ## Install golangci-lint.
 .PHONY: _install.gotests
 _install.gotests: ## Install gotests.
 	@$(GO) install github.com/cweill/gotests/gotests@$(GO_TESTS_VERSION)
+
+
+.PHONY: _install.git-chglog
+_install.git-chglog: ## Install git-chglog tool which is used to generate CHANGELOG.
+	@$(GO) install github.com/git-chglog/git-chglog/cmd/git-chglog@$(GIT_CHGLOG_VERSION)

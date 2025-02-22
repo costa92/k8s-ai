@@ -1,0 +1,72 @@
+# 样式使用 github 风格
+style: github
+# 使用的模板文件
+template: CHANGELOG.tpl.md
+info:
+  # 更新日志标题
+  title: CHANGELOG
+  # 仓库地址
+  repository_url: https://github.com/costa92/k8s-ai
+
+options:
+  commits:
+    # 提交过滤器
+    filters:
+      Type:
+        - feat # 新功能
+        - fix # 修复
+        - perf # 性能优化
+        - refactor # 重构
+    # 按作用域排序
+    sort_by: Scope
+
+  commit_groups:
+    # 按类型分组
+    group_by: Type
+    # 按标题排序
+    sort_by: Title
+    # 标题顺序
+    title_order:
+      - feat
+    # 标题映射
+    title_maps:
+      feat: Features # 新功能
+      fix: Bug Fixes # 错误修复
+      perf: Performance Improvements # 性能改进
+      refactor: Code Refactoring # 代码重构
+
+  # 提交信息头部格式
+  header:
+    pattern: "^(\\w*)(?:\\(([\\w\\$\\.\\-\\*\\s]*)\\))?\\:\\s(.*)$"
+    pattern_maps:
+      - Type # 类型
+      - Scope # 作用域
+      - Subject # 主题
+
+  # Issue 相关配置
+  issues:
+    prefix:
+      - "#"
+
+  # 引用动作配置
+  refs:
+    actions:
+      - Closes # 关闭
+      - Fixes # 修复
+
+  # 合并提交配置
+  merges:
+    pattern: "^Merge branch '(\\w+)'$"
+    pattern_maps:
+      - Source # 来源分支
+
+  # 回滚提交配置
+  reverts:
+    pattern: "^Revert \"([\\s\\S]*)\"$"
+    pattern_maps:
+      - Header # 头部信息
+
+  # 注释配置
+  notes:
+    keywords:
+      - BREAKING CHANGE # 重大变更标记

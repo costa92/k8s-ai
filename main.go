@@ -61,7 +61,7 @@ func main() {
 
 	// Wait for the caches to be synced before starting the workers
 	if !cache.WaitForCacheSync(stopCh, podInformer.HasSynced) {
-		runtime.HandleError(fmt.Errorf("Timed out waiting for caches to sync"))
+		runtime.HandleError(fmt.Errorf("timed out waiting for caches to sync"))
 		return
 	}
 

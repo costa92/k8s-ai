@@ -29,6 +29,10 @@ build: tidy ## Build source code for host platform.
 	$(MAKE) go.build
 
 
+.PHONY: add-copyright
+add-copyright: ## Ensures source code files have copyright license headers.
+	$(MAKE) copyright.add
+
 
 .PHONY: copy-githooks
 copy-githooks:

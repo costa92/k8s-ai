@@ -110,3 +110,9 @@ _install.uplift: ## Install uplift.
 .PHONY: _install.license 
 _install.license : ## Install license tool which is used to generate LICENSE file as you want.
 	@$(GO) install github.com/nishanths/license/v5@$(LICENSE_VERSION)
+
+
+.PHONY: _install.gsemver
+_install.gsemver: ## Install gsemver.
+	@$(GO) install github.com/arnaud-deprez/gsemver@$(GSEMVER_VERSION)
+	@$(SCRIPTS_DIR)/add-completion.sh gsemver bash

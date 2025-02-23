@@ -36,6 +36,8 @@
 | **goimports** | Go 导入语句格式化 | `make _install.goimports` |
 | **git-chglog** | CHANGELOG 生成工具 | `make _install.git-chglog` |
 | **uplift** | 版本发布管理工具 | `make _install.uplift` |
+| **license** | LICENSE 文件生成工具 | `make _install.license` |
+| **gsemver** | 语义版本管理工具 | `make _install.gsemver` |
 
 ## CI/CD 工具
 
@@ -44,3 +46,5 @@
 | **_install.ci** | 安装 CI/CD 必需工具 |
 | **_install.code-generator** | 安装代码生成工具 |
 | **tools.verify.code-generator** | 验证代码生成器 |
+
+### 示例用法

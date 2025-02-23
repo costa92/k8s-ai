@@ -89,3 +89,19 @@ _install.wire: ## Install wire.
 		echo "===========> Installing wire" \
 		$(GO) install github.com/google/wire/cmd/wire@$(WIRE_VERSION); \
 	fi;
+
+.PHONY: _install.mockgen
+_install.mockgen: ## Install mockgen.
+	@if [ -z "$(MOCKGEN_VERSION)" ]; then \
+		echo "Warning: MOCKGEN_VERSION is not set, using default version."; \
+	else \
+		echo "===========> Installing mockgen" \
+		$(GO) install github.com/golang/mock/mockgen@$(MOCKGEN_VERSION); \
+	fi;
+
+
+.PHONY: _install.uplift
+_install.uplift: ## Install uplift.
+	@export UPLIFT_INSTALL_DIR=$(HOME)/bin && \
+		curl --retry 10 -sL https://raw.githubusercontent.com/gembaadvantage/uplift/main/scripts/install | bash -s -- '--no-sudo'
+	@$(SCRIPTS_DIR)/add-completion.sh uplift bash

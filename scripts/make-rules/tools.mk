@@ -105,3 +105,8 @@ _install.uplift: ## Install uplift.
 	@export UPLIFT_INSTALL_DIR=$(HOME)/bin && \
 		curl --retry 10 -sL https://raw.githubusercontent.com/gembaadvantage/uplift/main/scripts/install | bash -s -- '--no-sudo'
 	@$(SCRIPTS_DIR)/add-completion.sh uplift bash
+
+
+.PHONY: _install.license 
+_install.license : ## Install license tool which is used to generate LICENSE file as you want.
+	@$(GO) install github.com/nishanths/license/v5@$(LICENSE_VERSION)

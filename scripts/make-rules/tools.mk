@@ -116,3 +116,7 @@ _install.license : ## Install license tool which is used to generate LICENSE fil
 _install.gsemver: ## Install gsemver.
 	@$(GO) install github.com/arnaud-deprez/gsemver@$(GSEMVER_VERSION)
 	@$(SCRIPTS_DIR)/add-completion.sh gsemver bash
+
+.PHONY: _install.go-gitlint
+_install.go-gitlint: ## Install go-gitlint.
+	@$(GO) install github.com/marmotedu/go-gitlint/cmd/go-gitlint@$(GO_GIT_LINT_VERSION)

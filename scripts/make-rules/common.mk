@@ -42,6 +42,11 @@ $(GO) install $(1)@$(2)
 endef
 
 
+# Copy githook scripts when execute makefile
+COPY_GITHOOK:=$(shell cp -f githooks/* .git/hooks/)
+
+
+
 # 设置构建输出目录
 BUILD_DIR := $(PROJ_ROOT_DIR)/build
 

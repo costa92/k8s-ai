@@ -29,6 +29,14 @@ build: tidy ## Build source code for host platform.
 	$(MAKE) go.build
 
 
+
+.PHONY: copy-githooks
+copy-githooks:
+	@$(COPY_GITHOOK)
+	@chmod +x .git/hooks/*
+	@echo "Copy githooks done"
+
+
 ## --------------------------------------
 ## Tidy
 ## --------------------------------------

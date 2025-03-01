@@ -1,12 +1,13 @@
 package options
 
 import (
-	"github.com/costa92/k8s-krm-go/pkg/db"
-	"github.com/redis/go-redis/v9"
+	"time"
 
 	"github.com/redis/go-redis/extra/rediscensus/v9"
+	"github.com/redis/go-redis/v9"
 	"github.com/spf13/pflag"
-	"time"
+
+	"github.com/costa92/k8s-ai/pkg/db"
 )
 
 var _ IOptions = (*RedisOptions)(nil)
@@ -35,6 +36,7 @@ func NewRedisOptions() *RedisOptions {
 		Username:     "",
 		Password:     "",
 		Database:     0,
+		MaxRetries:   3,
 		MinIdleConns: 0,
 		DialTimeout:  5 * time.Second,
 		ReadTimeout:  3 * time.Second,
@@ -44,20 +46,23 @@ func NewRedisOptions() *RedisOptions {
 	}
 }
 
+// Validate verifies flags passed to RedisOptions.
 func (o *RedisOptions) Validate() []error {
-	var errs []error
+	errs := []error{}
+
 	if o.WriteTimeout == 0 {
 		o.WriteTimeout = o.ReadTimeout
 	}
 
 	if o.PoolTimeout == 0 {
-		o.PoolTimeout = o.PoolTimeout + 1*time.Second
+		o.PoolTimeout = o.ReadTimeout + 1*time.Second
 	}
+
 	return errs
 }
 
-// AddFlags
-func (o *RedisOptions) AddFlags(fs *pflag.FlagSet, prefixs ...string) {
+// AddFlags adds flags related to redis storage for a specific APIServer to the specified FlagSet.
+func (o *RedisOptions) AddFlags(fs *pflag.FlagSet, prefixes ...string) {
 	fs.StringVar(&o.Addr, "redis.addr", o.Addr, "Address of your Redis server(ip:port).")
 	fs.StringVar(&o.Username, "redis.username", o.Username, "Username for access to redis service.")
 	fs.StringVar(&o.Password, "redis.password", o.Password, "Optional auth password for redis db.")
@@ -74,7 +79,6 @@ func (o *RedisOptions) AddFlags(fs *pflag.FlagSet, prefixs ...string) {
 	fs.BoolVar(&o.EnableTrace, "redis.enable-trace", o.EnableTrace, "Redis hook tracing (using open telemetry).")
 }
 
-// NewClient
 func (o *RedisOptions) NewClient() (*redis.Client, error) {
 	opts := &db.RedisOptions{
 		Addr:         o.Addr,
@@ -89,13 +93,16 @@ func (o *RedisOptions) NewClient() (*redis.Client, error) {
 		PoolSize:     o.PoolSize,
 		PoolTimeout:  o.PoolTimeout,
 	}
+
 	rdb, err := db.NewRedis(opts)
 	if err != nil {
 		return nil, err
 	}
+
 	// hook tracing (using open telemetry)
 	if o.EnableTrace {
 		rdb.AddHook(rediscensus.NewTracingHook())
 	}
+
 	return rdb, nil
 }

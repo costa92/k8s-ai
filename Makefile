@@ -41,6 +41,11 @@ copy-githooks:
 	@echo "Copy githooks done"
 
 
+.PHONY: ca
+ca: ## Generate CA files for all onex components.
+	$(MAKE) gen.ca
+
+
 ## --------------------------------------
 ## Tidy
 ## --------------------------------------

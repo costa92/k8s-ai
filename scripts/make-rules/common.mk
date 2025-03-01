@@ -45,7 +45,10 @@ endef
 # Copy githook scripts when execute makefile
 COPY_GITHOOK:=$(shell cp -f githooks/* .git/hooks/)
 
-
+# Specify components which need certificate
+ifeq ($(origin CERTIFICATES),undefined)
+CERTIFICATES=apiserver admin
+endif
 
 # 设置构建输出目录
 BUILD_DIR := $(PROJ_ROOT_DIR)/build
@@ -59,6 +62,12 @@ PRJ_SRC_PATH :=github.com/costa92/k8s-ai
 COMMA := ,
 SPACE :=
 SPACE +=
+
+
+ifeq ($(origin OUTPUT_DIR),undefined)
+OUTPUT_DIR := $(PROJ_ROOT_DIR)/_output
+$(shell mkdir -p $(OUTPUT_DIR))
+endif
 
 
 MANIFESTS_DIR=$(PROJ_ROOT_DIR)/manifests

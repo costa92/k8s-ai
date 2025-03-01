@@ -32,10 +32,12 @@ K8SAI_OUTPUT="${PROJ_ROOT_DIR}/${K8SAI_OUTPUT_SUBPATH}"
 
 
 # source the common.sh file
-source "${SCRIPTS_DIR}/lib/common.sh"
+# source "${SCRIPTS_DIR}/lib/common.sh"
 
+source "${SCRIPTS_DIR}/lib/util.sh"
+source "${SCRIPTS_DIR}/lib/logging.sh"
 
 # 初始化本地环境
-k8sai::init::local() {
+proj::init::local() {
  return 0
 }

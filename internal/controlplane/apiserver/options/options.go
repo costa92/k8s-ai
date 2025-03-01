@@ -113,7 +113,7 @@ func NewOptions() *Options {
 
 	// the following three lines remove dependence with kube-apiserver
 	o.RecommendedOptions.Authorization = nil
-	o.RecommendedOptions.CoreAPI.CoreAPIKubeconfigPath = "/home/colin/.onex/config.local"
+	o.RecommendedOptions.CoreAPI.CoreAPIKubeconfigPath = "/Users/costalong/.k8s-ai/config.local"
 	// We only register the plugin of onex-apiserver,
 	// so we need to clear the plugin registered by apiserver by default.
 	o.RecommendedOptions.Admission.Plugins = admission.NewPlugins()

@@ -21,3 +21,18 @@ gen.kubeconfig: gen.ca ## Generate kubeconfig files.
 	@$(SCRIPTS_DIR)/gen-kubeconfig.sh $(OUTPUT_DIR)/cert/ca.pem \
 		$(OUTPUT_DIR)/cert/admin.pem $(OUTPUT_DIR)/cert/admin-key.pem > \
 		$(OUTPUT_DIR)/config
+
+.PHONY: gen.appconfig
+gen.appconfig: $(addprefix gen.appconfig., $(SERVICES)) ## Generate all application configuration files.
+
+.PHONY: gen.appconfig.%
+gen.appconfig.%: ## Generate specified application configuration file.
+	$(eval PROJECT_ENV_FILE ?= $(MANIFESTS_DIR)/env/env.local)
+	$(eval GENERATED_SERVICE_DIR := $(OUTPUT_DIR)/appconfig)
+	$(eval SERVICE := $(lastword $(subst ., ,$*)))
+	@echo "===========> Generating $(SERVICE) configuration file"
+	@$(SCRIPTS_DIR)/gen-service-config.sh $(SERVICE) $(PROJECT_ENV_FILE) \
+		$(PROJ_ROOT_DIR)/configs/appconfig/$(SERVICE).config.tmpl.yaml $(GENERATED_SERVICE_DIR)
+ifeq ($(V),1)
+	echo "DBG: Generating $(SERVICE) application configuration file at $(GENERATED_SERVICE_DIR)/$(SERVICE)"
+endif

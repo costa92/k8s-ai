@@ -1,13 +1,15 @@
 
 # ==============================================================================
 # Includes
-
 # include the common make file
+
 ifeq ($(origin PROJ_ROOT_DIR),undefined)
 PROJ_ROOT_DIR :=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 endif
 
+
 include $(PROJ_ROOT_DIR)/scripts/make-rules/common-versions.mk
+
 
 
 # 设置默认 shell 为 bash,因为某些环境中 sh 不是链接到 bash

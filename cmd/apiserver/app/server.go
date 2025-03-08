@@ -78,6 +78,7 @@ func WithEtcdOptions(prefix string, versions ...schema.GroupVersion) Option {
 		for _, version := range versions {
 			controlplane.AddStableAPIGroupVersionsEnabledByDefault(version)
 		}
+
 	}
 }
 

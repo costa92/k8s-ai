@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 
 	_ "go.uber.org/automaxprocs/maxprocs"
@@ -44,11 +45,14 @@ func main() {
 		app.WithAdmissionInitializers(func(c *genericapiserver.RecommendedConfig) ([]admission.PluginInitializer, error) {
 			client, err := versioned.NewForConfig(c.LoopbackClientConfig)
 			if err != nil {
+				klog.ErrorS(err, "Failed to create client")
 				return nil, err
 			}
+			// NOTICE: As we create a shared informer, we need to start it later.
 			informerFactory := informers.NewSharedInformerFactory(client, c.LoopbackClientConfig.Timeout)
 			// NOTICE: As we create a shared informer, we need to start it later.
 			app.WithSharedInformerFactory(informerFactory)
+			fmt.Println("informerFactory: ", informerFactory)
 			return []admission.PluginInitializer{initializer.New(informerFactory, client)}, nil
 		}),
 		app.WithPostStartHook(
@@ -56,6 +60,7 @@ func main() {
 			func(ctx genericapiserver.PostStartHookContext) error {
 				client, err := versioned.NewForConfig(ctx.LoopbackClientConfig)
 				if err != nil {
+					klog.ErrorS(err, "Failed to create client")
 					return err
 				}
 

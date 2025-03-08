@@ -12,6 +12,13 @@ function proj::util::sudo()
   echo ${LINUX_PASSWORD} | sudo -S $1
 }
 
+function proj::util::sourced_variable {
+  # Call this function to tell shellcheck that a variable is supposed to
+  # be used from other calling context. This helps quiet an "unused
+  # variable" warning from shellcheck and also document your code.
+  true
+}
+
 
 # Downloads cfssl/cfssljson/cfssl-certinfo into $1 directory if they do not already exist in PATH
 #
@@ -163,4 +170,25 @@ function proj::util::host_arch() {
       ;;
   esac
   echo "${host_arch}"
+}
+
+# proj::util::ensure-gnu-date
+# Determines which date binary is gnu-date on linux/darwin
+#
+# Sets:
+#  DATE: The name of the gnu-date binary
+#
+function proj::util::ensure-gnu-date {
+  # NOTE: the echo below is a workaround to ensure date is executed before the grep.
+  # see: https://github.com/kubernetes/kubernetes/issues/87251
+  date_help="$(LANG=C date --help 2>&1 || true)"
+  if echo "${date_help}" | grep -q "GNU\|BusyBox"; then
+    DATE="date"
+  elif command -v gdate &>/dev/null; then
+    DATE="gdate"
+  else
+    proj::log::error "Failed to find GNU date as date or gdate. If you are on Mac: brew install coreutils." >&2
+    return 1
+  fi
+  proj::util::sourced_variable "${DATE}"
 }

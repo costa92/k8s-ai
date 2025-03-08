@@ -74,3 +74,8 @@ endif
 
 MANIFESTS_DIR=$(PROJ_ROOT_DIR)/manifests
 SCRIPTS_DIR=$(PROJ_ROOT_DIR)/scripts
+
+
+
+APIROOT ?= $(PROJ_ROOT_DIR)/pkg/api
+APISROOT ?= $(PROJ_ROOT_DIR)/pkg/apis

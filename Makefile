@@ -18,6 +18,20 @@ define USAGE_OPTIONS
 
 endef
 
+.PHONY: gen-k8s
+gen-k8s: ## Generate all necessary kubernetes related files, such as deepcopy files
+	@$(PROJ_ROOT_DIR)/scripts/update-codegen.sh
+	# The following command is old generate way with makefile script.
+	# Comment here as a code history.
+	# $(MAKE) -s generated.files
+
+
+
+.PHONY: protoc
+protoc: ## Generate api proto files.
+	$(MAKE) gen.protoc
+
+
 ## --------------------------------------
 ## Binaries
 ## --------------------------------------

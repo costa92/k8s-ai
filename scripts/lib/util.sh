@@ -192,3 +192,54 @@ function proj::util::ensure-gnu-date {
   fi
   proj::util::sourced_variable "${DATE}"
 }
+
+# looks for $1 in well-known output locations for the host platform
+# $PROJ_ROOT_DIR must be set
+function proj::util::find-binary() {
+  proj::util::find-binary-for-platform "$1" "$(proj::util::host_platform)"
+}
+
+# This figures out the host platform without relying on golang.  We need this as
+# we don't want a golang install to be a prerequisite to building yet we need
+# this info to figure out where the final binaries are placed.
+function proj::util::host_platform() {
+  echo "$(proj::util::host_os)/$(proj::util::host_arch)"
+}
+
+
+# looks for $1 in well-known output locations for the platform ($2)
+# $PROJ_ROOT_DIR must be set
+function proj::util::find-binary-for-platform() {
+  local -r lookfor="$1"
+  local -r platform="$2"
+  local locations=(
+    "${PROJ_ROOT_DIR}/_output/bin/${lookfor}"
+    "${PROJ_ROOT_DIR}/_output/dockerized/bin/${platform}/${lookfor}"
+    "${PROJ_ROOT_DIR}/_output/local/bin/${platform}/${lookfor}"
+    "${PROJ_ROOT_DIR}/platforms/${platform}/${lookfor}"
+  )
+
+  # if we're looking for the host platform, add local non-platform-qualified search paths
+  if [[ "${platform}" = "$(proj::util::host_platform)" ]]; then
+    locations+=(
+      "${PROJ_ROOT_DIR}/_output/local/go/bin/${lookfor}"
+      "${PROJ_ROOT_DIR}/_output/dockerized/go/bin/${lookfor}"
+    );
+  fi
+
+  # looks for $1 in the $PATH
+  if which "${lookfor}" >/dev/null; then
+    local -r local_bin="$(which "${lookfor}")"
+    locations+=( "${local_bin}"  );
+  fi
+
+  # List most recently-updated location.
+  local -r bin=$( (ls -t "${locations[@]}" 2>/dev/null || true) | head -1 )
+
+  if [[ -z "${bin}" ]]; then
+    proj::log::error "Failed to find binary ${lookfor} for platform ${platform}"
+    return 1
+  fi
+
+  echo -n "${bin}"
+}
